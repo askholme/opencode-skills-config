@@ -161,6 +161,24 @@ fetch_skill_dir \
   "lead-magnet"
 
 # ---------------------------------------------------------------------------
+# Fetch skill from https://github.com/inference-sh/skills
+# ---------------------------------------------------------------------------
+fetch_skill_dir \
+  "https://github.com/inference-sh/skills" \
+  "main" \
+  "skills/agent-tools" \
+  "agent-tools"
+
+# ---------------------------------------------------------------------------
+# Fetch skill from https://github.com/skill-zero/s
+# ---------------------------------------------------------------------------
+fetch_skill_dir \
+  "https://github.com/skill-zero/s" \
+  "main" \
+  "skills/social-media-carousel" \
+  "social-media-carousel"
+
+# ---------------------------------------------------------------------------
 # Install local skill: pptx-numa
 # ---------------------------------------------------------------------------
 install_local_skill "pptx-numa/pptx-numa" "pptx-numa"
@@ -245,9 +263,12 @@ jq '
             "permission": (
               ((."linkedin-support" // {}).permission // {}) * {
                 "skill": {
+                  "pptx": "allow",
                   "pdf": "allow",
                   "linkedin-content": "allow",
-                  "lead-magnet": "allow"
+                  "lead-magnet": "allow",
+                  "social-media-carousel": "allow",
+                  "agent-tools": "allow"
                 }
               }
             )
