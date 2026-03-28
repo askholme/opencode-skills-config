@@ -146,6 +146,21 @@ for skill in linkedin-cli pptx-official professional-proofreader; do
 done
 
 # ---------------------------------------------------------------------------
+# Fetch skill from https://github.com/openclaudia/openclaudia-skills
+# ---------------------------------------------------------------------------
+fetch_skill_dir \
+  "https://github.com/openclaudia/openclaudia-skills" \
+  "main" \
+  "skills/linkedin-content" \
+  "linkedin-content"
+
+fetch_skill_dir \
+  "https://github.com/openclaudia/openclaudia-skills" \
+  "main" \
+  "skills/lead-magnet" \
+  "lead-magnet"
+
+# ---------------------------------------------------------------------------
 # Install local skill: pptx-numa
 # ---------------------------------------------------------------------------
 install_local_skill "pptx-numa/pptx-numa" "pptx-numa"
@@ -182,7 +197,8 @@ jq '
                   "pptx-numa": "allow",
                   "linkedin-cli": "allow",
                   "pptx-official": "allow",
-                  "professional-proofreader": "allow"
+                  "professional-proofreader": "allow",
+                  "lead-magnet": "allow"
                 }
               }
             )
@@ -219,6 +235,18 @@ jq '
               ((.["business-brainstorm"] // {}).permission // {}) * {
                 "skill": {
                   "brainstorming": "allow"
+                }
+              }
+            )
+          }
+        ),
+        "linkedin-support": (
+          (."linkedin-support" // {}) * {
+            "permission": (
+              ((."linkedin-support" // {}).permission // {}) * {
+                "skill": {
+                  "linkedin-content": "allow",
+                  "lead-magnet": "allow"
                 }
               }
             )
