@@ -245,6 +245,7 @@ jq '
             "permission": (
               ((."linkedin-support" // {}).permission // {}) * {
                 "skill": {
+                  "pdf": "allow",
                   "linkedin-content": "allow",
                   "lead-magnet": "allow"
                 }
