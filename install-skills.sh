@@ -166,7 +166,7 @@ fetch_skill_dir \
 fetch_skill_dir \
   "https://github.com/inference-sh/skills" \
   "main" \
-  "skills/agent-tools" \
+  "tools/agent-tools" \
   "agent-tools"
 
 # ---------------------------------------------------------------------------
