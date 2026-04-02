@@ -179,6 +179,16 @@ fetch_skill_dir \
   "social-media-carousel"
 
 # ---------------------------------------------------------------------------
+# Fetch skills from https://github.com/sergio-bershadsky/ai
+# ---------------------------------------------------------------------------
+BERSHADSKY_REPO="https://github.com/sergio-bershadsky/ai"
+BERSHADSKY_BRANCH="main"
+
+for skill in replit-prompt replit-prd replit-plan; do
+  fetch_skill_dir "$BERSHADSKY_REPO" "$BERSHADSKY_BRANCH" "plugins/replit-prompts/skills/$skill" "$skill"
+done
+
+# ---------------------------------------------------------------------------
 # Install local skill: pptx-numa
 # ---------------------------------------------------------------------------
 install_local_skill "pptx-numa/pptx-numa" "pptx-numa"
@@ -229,7 +239,10 @@ jq '
                 "skill": {
                   "frontend-design": "allow",
                   "skill-creator": "allow",
-                  "brainstorming": "allow"
+                  "brainstorming": "allow",
+                  "replit-prompt": "allow",
+                  "replit-prd": "allow",
+                  "replit-plan": "allow"
                 }
               }
             )
@@ -241,7 +254,10 @@ jq '
               ((.["developer"] // {}).permission // {}) * {
                 "skill": {
                   "frontend-design": "allow",
-                  "skill-creator": "allow"
+                  "skill-creator": "allow",
+                  "replit-prompt": "allow",
+                  "replit-prd": "allow",
+                  "replit-plan": "allow"
                 }
               }
             )
@@ -269,6 +285,32 @@ jq '
                   "lead-magnet": "allow",
                   "social-media-carousel": "allow",
                   "agent-tools": "allow"
+                }
+              }
+            )
+          }
+        ),
+        "code-reviewer": (
+          (.["code-reviewer"] // {}) * {
+            "permission": (
+              ((.["code-reviewer"] // {}).permission // {}) * {
+                "skill": {
+                  "replit-prompt": "allow",
+                  "replit-prd": "allow",
+                  "replit-plan": "allow"
+                }
+              }
+            )
+          }
+        ),
+        "code-reviewerer": (
+          (.["code-reviewerer"] // {}) * {
+            "permission": (
+              ((.["code-reviewerer"] // {}).permission // {}) * {
+                "skill": {
+                  "replit-prompt": "allow",
+                  "replit-prd": "allow",
+                  "replit-plan": "allow"
                 }
               }
             )
