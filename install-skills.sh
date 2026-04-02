@@ -170,12 +170,12 @@ fetch_skill_dir \
   "agent-tools"
 
 # ---------------------------------------------------------------------------
-# Fetch skill from https://github.com/skill-zero/s
+# Fetch skill from https://github.com/inference-sh/skills (was skill-zero/s)
 # ---------------------------------------------------------------------------
 fetch_skill_dir \
-  "https://github.com/skill-zero/s" \
+  "https://github.com/inference-sh/skills" \
   "main" \
-  "skills/social-media-carousel" \
+  "guides/social/social-media-carousel" \
   "social-media-carousel"
 
 # ---------------------------------------------------------------------------
