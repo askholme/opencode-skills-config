@@ -189,6 +189,60 @@ for skill in replit-prompt replit-prd replit-plan; do
 done
 
 # ---------------------------------------------------------------------------
+# Fetch skill from https://github.com/cnemri/google-genai-skills
+# ---------------------------------------------------------------------------
+fetch_skill_dir \
+  "https://github.com/cnemri/google-genai-skills" \
+  "main" \
+  "skills/nano-banana-use" \
+  "nano-banana-use"
+
+# ---------------------------------------------------------------------------
+# Fetch skill from https://github.com/secondsky/claude-skills
+# (nano-banana-prompts — prompt engineering companion for nano-banana-use)
+# ---------------------------------------------------------------------------
+fetch_skill_dir \
+  "https://github.com/secondsky/claude-skills" \
+  "main" \
+  "plugins/nano-banana-prompts/skills/nano-banana-prompts" \
+  "nano-banana-prompts"
+
+# ---------------------------------------------------------------------------
+# Hardcode Google API key in nano-banana-use Python scripts
+# ---------------------------------------------------------------------------
+NANO_BANANA_API_KEY="AIzaSyBKQa02b8U6dJCj8IEbAfSSmyyMucUibkw"
+echo ""
+echo "→ Hardcoding API key in nano-banana-use scripts ..."
+for script in generate_image.py edit_image.py compose_image.py; do
+  script_path="$SKILLS_DIR/nano-banana-use/scripts/$script"
+  if [[ -f "$script_path" ]]; then
+    # Replace the get_client function to use hardcoded API key
+    python3 -c "
+import re, sys
+with open('$script_path', 'r') as f:
+    content = f.read()
+# Replace the entire get_client function
+old_func = re.search(r'def get_client\(\):.*?(?=\ndef |\nif __name__)', content, re.DOTALL)
+if old_func:
+    new_func = '''def get_client():
+    # Hardcoded API key fallback
+    HARDCODED_API_KEY = \"$NANO_BANANA_API_KEY\"
+
+    api_key = os.environ.get(\"GOOGLE_API_KEY\") or os.environ.get(\"GEMINI_API_KEY\") or HARDCODED_API_KEY
+    return genai.Client(api_key=api_key)
+
+'''
+    content = content[:old_func.start()] + new_func + content[old_func.end():]
+    with open('$script_path', 'w') as f:
+        f.write(content)
+    print(f'  ✓ Patched {\"$script\"}')
+else:
+    print(f'  ⚠ Could not find get_client() in {\"$script\"}', file=sys.stderr)
+"
+  fi
+done
+
+# ---------------------------------------------------------------------------
 # Install local skill: pptx-numa
 # ---------------------------------------------------------------------------
 install_local_skill "pptx-numa/pptx-numa" "pptx-numa"
@@ -226,7 +280,9 @@ jq '
                   "linkedin-cli": "allow",
                   "pptx-official": "allow",
                   "professional-proofreader": "allow",
-                  "lead-magnet": "allow"
+                  "lead-magnet": "allow",
+                  "nano-banana-use": "allow",
+                  "nano-banana-prompts": "allow"
                 }
               }
             )
@@ -284,7 +340,9 @@ jq '
                   "linkedin-content": "allow",
                   "lead-magnet": "allow",
                   "social-media-carousel": "allow",
-                  "agent-tools": "allow"
+                  "agent-tools": "allow",
+                  "nano-banana-use": "allow",
+                  "nano-banana-prompts": "allow"
                 }
               }
             )
