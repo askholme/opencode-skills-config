@@ -1,19 +1,22 @@
 # PptxGenJS Tutorial
 
+> **In the Numa workflow, pptxgenjs is used only to generate complex visual slides (diagrams, charts, multi-shape layouts) that are then imported into the template-based deck via pptx-automizer. It is NOT used to create standalone decks. See SKILL.md for the full workflow.**
+>
+> **Fonts come from the template, not from pptxgenjs.** When your generated slide is imported into the template deck, the template's embedded fonts (Georgia for titles, Play for body) take effect. You can still specify `fontFace` in pptxgenjs for visual accuracy during development, but the template is the source of truth.
+
 ## Setup & Basic Structure
 
 ```javascript
 const pptxgen = require("pptxgenjs");
 
 let pres = new pptxgen();
-pres.layout = 'LAYOUT_16x9';  // or 'LAYOUT_16x10', 'LAYOUT_4x3', 'LAYOUT_WIDE'
-pres.author = 'Your Name';
-pres.title = 'Presentation Title';
+pres.layout = 'LAYOUT_WIDE';  // 13.3" × 7.5" — MUST match the Numa template
 
 let slide = pres.addSlide();
-slide.addText("Hello World!", { x: 0.5, y: 0.5, fontSize: 36, color: "363636" });
+slide.addText("Hello World!", { x: 0.5, y: 0.5, fontSize: 36, color: "0E2841" });
 
-pres.writeFile({ fileName: "Presentation.pptx" });
+// Write to a temporary file — this will be imported into the template deck via pptx-automizer
+pres.writeFile({ fileName: "generated-slides.pptx" });
 ```
 
 ## Layout Dimensions
@@ -31,8 +34,8 @@ Slide dimensions (coordinates in inches):
 ```javascript
 // Basic text
 slide.addText("Simple Text", {
-  x: 1, y: 1, w: 8, h: 2, fontSize: 24, fontFace: "Arial",
-  color: "363636", bold: true, align: "center", valign: "middle"
+  x: 1, y: 1, w: 8, h: 2, fontSize: 24, fontFace: "Play",
+  color: "0E2841", bold: true, align: "center", valign: "middle"
 });
 
 // Character spacing (use charSpacing, not letterSpacing which is silently ignored)
@@ -87,19 +90,19 @@ slide.addText("• First item", { ... });  // Creates double bullets
 ```javascript
 slide.addShape(pres.shapes.RECTANGLE, {
   x: 0.5, y: 0.8, w: 1.5, h: 3.0,
-  fill: { color: "FF0000" }, line: { color: "000000", width: 2 }
+  fill: { color: "943C31" }, line: { color: "000000", width: 2 }
 });
 
-slide.addShape(pres.shapes.OVAL, { x: 4, y: 1, w: 2, h: 2, fill: { color: "0000FF" } });
+slide.addShape(pres.shapes.OVAL, { x: 4, y: 1, w: 2, h: 2, fill: { color: "8FA1FF" } });
 
 slide.addShape(pres.shapes.LINE, {
-  x: 1, y: 3, w: 5, h: 0, line: { color: "FF0000", width: 3, dashType: "dash" }
+  x: 1, y: 3, w: 5, h: 0, line: { color: "943C31", width: 3, dashType: "dash" }
 });
 
 // With transparency
 slide.addShape(pres.shapes.RECTANGLE, {
   x: 1, y: 1, w: 3, h: 2,
-  fill: { color: "0088CC", transparency: 50 }
+  fill: { color: "009B81", transparency: 50 }
 });
 
 // Rounded rectangle (rectRadius only works with ROUNDED_RECTANGLE, not RECTANGLE)
@@ -223,7 +226,7 @@ async function iconToBase64Png(IconComponent, color, size = 256) {
 ### Add Icon to Slide
 
 ```javascript
-const iconData = await iconToBase64Png(FaCheckCircle, "#4472C4", 256);
+const iconData = await iconToBase64Png(FaCheckCircle, "#009B81", 256);
 
 slide.addImage({
   data: iconData,
@@ -249,10 +252,10 @@ Popular icon sets in react-icons:
 
 ```javascript
 // Solid color
-slide.background = { color: "F1F1F1" };
+slide.background = { color: "F3F0EB" };
 
 // Color with transparency
-slide.background = { color: "FF3399", transparency: 50 };
+slide.background = { color: "8FA1FF", transparency: 50 };
 
 // Image from URL
 slide.background = { path: "https://example.com/bg.jpg" };
@@ -271,12 +274,12 @@ slide.addTable([
   ["Cell 1", "Cell 2"]
 ], {
   x: 1, y: 1, w: 8, h: 2,
-  border: { pt: 1, color: "999999" }, fill: { color: "F1F1F1" }
+  border: { pt: 1, color: "C6C6D0" }, fill: { color: "F3F0EB" }
 });
 
 // Advanced with merged cells
 let tableData = [
-  [{ text: "Header", options: { fill: { color: "6699CC" }, color: "FFFFFF", bold: true } }, "Cell"],
+  [{ text: "Header", options: { fill: { color: "009B81" }, color: "FFFFFF", bold: true } }, "Cell"],
   [{ text: "Merged", options: { colspan: 2 } }]
 ];
 slide.addTable(tableData, { x: 1, y: 3.5, w: 8, colW: [4, 4] });
@@ -315,23 +318,23 @@ slide.addChart(pres.charts.BAR, chartData, {
   x: 0.5, y: 1, w: 9, h: 4, barDir: "col",
 
   // Custom colors (match your presentation palette)
-  chartColors: ["0D9488", "14B8A6", "5EEAD4"],
+  chartColors: ["009B81", "8FA1FF", "C0A883"],
 
   // Clean background
   chartArea: { fill: { color: "FFFFFF" }, roundedCorners: true },
 
   // Muted axis labels
-  catAxisLabelColor: "64748B",
-  valAxisLabelColor: "64748B",
+  catAxisLabelColor: "C6C6D0",
+  valAxisLabelColor: "C6C6D0",
 
   // Subtle grid (value axis only)
-  valGridLine: { color: "E2E8F0", size: 0.5 },
+  valGridLine: { color: "C6C6D0", size: 0.5 },
   catGridLine: { style: "none" },
 
   // Data labels on bars
   showValue: true,
   dataLabelPosition: "outEnd",
-  dataLabelColor: "1E293B",
+  dataLabelColor: "0E2841",
 
   // Hide legend for single series
   showLegend: false,
@@ -351,7 +354,7 @@ slide.addChart(pres.charts.BAR, chartData, {
 
 ```javascript
 pres.defineSlideMaster({
-  title: 'TITLE_SLIDE', background: { color: '283A5E' },
+  title: 'TITLE_SLIDE', background: { color: '0E2841' },
   objects: [{
     placeholder: { options: { name: 'title', type: 'title', x: 1, y: 2, w: 8, h: 2 } }
   }]
@@ -369,8 +372,8 @@ titleSlide.addText("My Title", { placeholder: "title" });
 
 1. **NEVER use "#" with hex colors** - causes file corruption
    ```javascript
-   color: "FF0000"      // ✅ CORRECT
-   color: "#FF0000"     // ❌ WRONG
+   color: "943C31"      // ✅ CORRECT
+   color: "#943C31"     // ❌ WRONG
    ```
 
 2. **NEVER encode opacity in hex color strings** - 8-char colors (e.g., `"00000020"`) corrupt the file. Use the `opacity` property instead.
@@ -402,11 +405,11 @@ titleSlide.addText("My Title", { placeholder: "title" });
    ```javascript
    // ❌ WRONG: Accent bar doesn't cover rounded corners
    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 1, y: 1, w: 3, h: 1.5, fill: { color: "FFFFFF" } });
-   slide.addShape(pres.shapes.RECTANGLE, { x: 1, y: 1, w: 0.08, h: 1.5, fill: { color: "0891B2" } });
+   slide.addShape(pres.shapes.RECTANGLE, { x: 1, y: 1, w: 0.08, h: 1.5, fill: { color: "FBAE40" } });
 
    // ✅ CORRECT: Use RECTANGLE for clean alignment
    slide.addShape(pres.shapes.RECTANGLE, { x: 1, y: 1, w: 3, h: 1.5, fill: { color: "FFFFFF" } });
-   slide.addShape(pres.shapes.RECTANGLE, { x: 1, y: 1, w: 0.08, h: 1.5, fill: { color: "0891B2" } });
+   slide.addShape(pres.shapes.RECTANGLE, { x: 1, y: 1, w: 0.08, h: 1.5, fill: { color: "FBAE40" } });
    ```
 
 ---

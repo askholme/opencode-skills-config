@@ -1,17 +1,24 @@
-# Editing Presentations
+# Creating & Editing Presentations
 
-## Template-Based Workflow
+This is the **default workflow** for all Numa decks. Every deck starts from the bundled template (`$SKILL_DIR/assets/agenda.pptx`), which provides branded slide layouts, embedded fonts (Georgia, Play), and the correct theme. Only use pptxgenjs for complex visual slides that are then imported back — see SKILL.md.
 
-When using an existing presentation as a template:
+## Workflow
 
-1. **Analyze existing slides**:
+1. **Copy and analyze the template**:
    ```bash
-   python scripts/thumbnail.py template.pptx
-   python -m markitdown template.pptx
+   cp $SKILL_DIR/assets/agenda.pptx working.pptx
+   python $SKILL_DIR/scripts/thumbnail.py working.pptx
+   python -m markitdown working.pptx
    ```
-   Review `thumbnails.jpg` to see layouts, and markitdown output to see placeholder text.
+   Review `thumbnails.jpg` to see available layouts. See SKILL.md → "Template Slide Layouts" for the full catalog of 36 layouts.
 
-2. **Plan slide mapping**: For each content section, choose a template slide.
+2. **Plan slide mapping**: For each content section, choose a slide layout from the template. See SKILL.md → "Template Slide Layouts" for the full catalog. Common choices:
+   - `slideLayout3.xml` (K - Title and Content) — most content slides
+   - `slideLayout2.xml` (K - 1/3 Rust) — intro/section opener slides
+   - `slideLayout4.xml` (K - 2 columns) — comparison/side-by-side
+   - `slideLayout12.xml` (K - 3 columns) — three parallel concepts
+   - `slideLayout28.xml` (D - Title and Content) — dark background slides
+   - Section Header layouts — dividers between sections
 
    ⚠️ **USE VARIED LAYOUTS** — monotonous presentations are a common failure mode. Don't default to basic title + bullet slides. Actively seek out:
    - Multi-column layouts (2-column, 3-column)
@@ -26,20 +33,20 @@ When using an existing presentation as a template:
 
    Match content type to layout style (e.g., key points → bullet slide, team info → multi-column, testimonials → quote slide).
 
-3. **Unpack**: `python scripts/office/unpack.py template.pptx unpacked/`
+3. **Unpack**: `python $SKILL_DIR/scripts/office/unpack.py working.pptx unpacked/`
 
 4. **Build presentation** (do this yourself, not with subagents):
-   - Delete unwanted slides (remove from `<p:sldIdLst>`)
-   - Duplicate slides you want to reuse (`add_slide.py`)
+   - Create slides from layouts: `python $SKILL_DIR/scripts/add_slide.py unpacked/ slideLayout3.xml`
+   - Delete unwanted template slides (remove from `<p:sldIdLst>`)
    - Reorder slides in `<p:sldIdLst>`
    - **Complete all structural changes before step 5**
 
 5. **Edit content**: Update text in each `slide{N}.xml`.
    **Use subagents here if available** — slides are separate XML files, so subagents can edit in parallel.
 
-6. **Clean**: `python scripts/clean.py unpacked/`
+6. **Clean**: `python $SKILL_DIR/scripts/clean.py unpacked/`
 
-7. **Pack**: `python scripts/office/pack.py unpacked/ output.pptx --original template.pptx`
+7. **Pack**: `python $SKILL_DIR/scripts/office/pack.py unpacked/ output.pptx --original working.pptx`
 
 ---
 
@@ -56,7 +63,7 @@ When using an existing presentation as a template:
 ### unpack.py
 
 ```bash
-python scripts/office/unpack.py input.pptx unpacked/
+python $SKILL_DIR/scripts/office/unpack.py input.pptx unpacked/
 ```
 
 Extracts PPTX, pretty-prints XML, escapes smart quotes.
@@ -64,8 +71,8 @@ Extracts PPTX, pretty-prints XML, escapes smart quotes.
 ### add_slide.py
 
 ```bash
-python scripts/add_slide.py unpacked/ slide2.xml      # Duplicate slide
-python scripts/add_slide.py unpacked/ slideLayout2.xml # From layout
+python $SKILL_DIR/scripts/add_slide.py unpacked/ slide2.xml      # Duplicate slide
+python $SKILL_DIR/scripts/add_slide.py unpacked/ slideLayout2.xml # From layout
 ```
 
 Prints `<p:sldId>` to add to `<p:sldIdLst>` at desired position.
@@ -73,7 +80,7 @@ Prints `<p:sldId>` to add to `<p:sldIdLst>` at desired position.
 ### clean.py
 
 ```bash
-python scripts/clean.py unpacked/
+python $SKILL_DIR/scripts/clean.py unpacked/
 ```
 
 Removes slides not in `<p:sldIdLst>`, unreferenced media, orphaned rels.
@@ -81,7 +88,7 @@ Removes slides not in `<p:sldIdLst>`, unreferenced media, orphaned rels.
 ### pack.py
 
 ```bash
-python scripts/office/pack.py unpacked/ output.pptx --original input.pptx
+python $SKILL_DIR/scripts/office/pack.py unpacked/ output.pptx --original input.pptx
 ```
 
 Validates, repairs, condenses XML, re-encodes smart quotes.
@@ -89,7 +96,7 @@ Validates, repairs, condenses XML, re-encodes smart quotes.
 ### thumbnail.py
 
 ```bash
-python scripts/thumbnail.py input.pptx [output_prefix] [--cols N]
+python $SKILL_DIR/scripts/thumbnail.py input.pptx [output_prefix] [--cols N]
 ```
 
 Creates `thumbnails.jpg` with slide filenames as labels. Default 3 columns, max 12 per grid.
