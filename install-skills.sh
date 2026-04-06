@@ -255,6 +255,14 @@ install_local_skill "pptx-numa/pptx-numa" "pptx-numa"
 install_local_skill "caveman" "caveman"
 
 # ---------------------------------------------------------------------------
+# Install local skills: ask-linkedin-*
+# ---------------------------------------------------------------------------
+install_local_skill "ask-linkedin-audit" "ask-linkedin-audit"
+install_local_skill "ask-linkedin-calendar" "ask-linkedin-calendar"
+install_local_skill "ask-linkedin-post" "ask-linkedin-post"
+install_local_skill "ask-linkedin-profile" "ask-linkedin-profile"
+
+# ---------------------------------------------------------------------------
 # Install custom commands
 # ---------------------------------------------------------------------------
 echo ""
@@ -364,7 +372,11 @@ jq '
                   "social-media-carousel": "allow",
                   "agent-tools": "allow",
                   "nano-banana-use": "allow",
-                  "nano-banana-prompts": "allow"
+                  "nano-banana-prompts": "allow",
+                  "ask-linkedin-audit": "allow",
+                  "ask-linkedin-calendar": "allow",
+                  "ask-linkedin-post": "allow",
+                  "ask-linkedin-profile": "allow"
                 }
               }
             )
