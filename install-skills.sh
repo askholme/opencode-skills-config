@@ -208,6 +208,15 @@ fetch_skill_dir \
   "nano-banana-prompts"
 
 # ---------------------------------------------------------------------------
+# Fetch skill from https://github.com/JuliusBrussee/caveman
+# ---------------------------------------------------------------------------
+fetch_skill_dir \
+  "https://github.com/JuliusBrussee/caveman" \
+  "main" \
+  "skills/caveman" \
+  "caveman"
+
+# ---------------------------------------------------------------------------
 # Hardcode Google API key in nano-banana-use Python scripts
 # ---------------------------------------------------------------------------
 NANO_BANANA_API_KEY="AIzaSyBKQa02b8U6dJCj8IEbAfSSmyyMucUibkw"
@@ -282,7 +291,8 @@ jq '
                   "professional-proofreader": "allow",
                   "lead-magnet": "allow",
                   "nano-banana-use": "allow",
-                  "nano-banana-prompts": "allow"
+                  "nano-banana-prompts": "allow",
+                  "caveman": "allow"
                 }
               }
             )
@@ -298,7 +308,8 @@ jq '
                   "brainstorming": "allow",
                   "replit-prompt": "allow",
                   "replit-prd": "allow",
-                  "replit-plan": "allow"
+                  "replit-plan": "allow",
+                  "caveman": "allow"
                 }
               }
             )
@@ -313,7 +324,8 @@ jq '
                   "skill-creator": "allow",
                   "replit-prompt": "allow",
                   "replit-prd": "allow",
-                  "replit-plan": "allow"
+                  "replit-plan": "allow",
+                  "caveman": "allow"
                 }
               }
             )
@@ -355,7 +367,8 @@ jq '
                 "skill": {
                   "replit-prompt": "allow",
                   "replit-prd": "allow",
-                  "replit-plan": "allow"
+                  "replit-plan": "allow",
+                  "caveman": "allow"
                 }
               }
             )
@@ -368,7 +381,8 @@ jq '
                 "skill": {
                   "replit-prompt": "allow",
                   "replit-prd": "allow",
-                  "replit-plan": "allow"
+                  "replit-plan": "allow",
+                  "caveman": "allow"
                 }
               }
             )
