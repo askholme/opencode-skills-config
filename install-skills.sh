@@ -9,6 +9,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$SCRIPT_DIR"
 
 SKILLS_DIR="$HOME/.config/opencode/skills"
+COMMANDS_DIR="$HOME/.config/opencode/commands"
 OPENCODE_CONFIG="$HOME/.config/opencode/opencode.json"
 
 # ---------------------------------------------------------------------------
@@ -104,6 +105,7 @@ install_local_skill() {
 # Ensure skills directory and config file exist
 # ---------------------------------------------------------------------------
 mkdir -p "$SKILLS_DIR"
+mkdir -p "$COMMANDS_DIR"
 mkdir -p "$(dirname "$OPENCODE_CONFIG")"
 
 if [[ ! -f "$OPENCODE_CONFIG" ]]; then
@@ -208,15 +210,6 @@ fetch_skill_dir \
   "nano-banana-prompts"
 
 # ---------------------------------------------------------------------------
-# Fetch skill from https://github.com/JuliusBrussee/caveman
-# ---------------------------------------------------------------------------
-fetch_skill_dir \
-  "https://github.com/JuliusBrussee/caveman" \
-  "main" \
-  "skills/caveman" \
-  "caveman"
-
-# ---------------------------------------------------------------------------
 # Hardcode Google API key in nano-banana-use Python scripts
 # ---------------------------------------------------------------------------
 NANO_BANANA_API_KEY="AIzaSyBKQa02b8U6dJCj8IEbAfSSmyyMucUibkw"
@@ -255,6 +248,23 @@ done
 # Install local skill: pptx-numa
 # ---------------------------------------------------------------------------
 install_local_skill "pptx-numa/pptx-numa" "pptx-numa"
+
+# ---------------------------------------------------------------------------
+# Install local skill: caveman
+# ---------------------------------------------------------------------------
+install_local_skill "caveman" "caveman"
+
+# ---------------------------------------------------------------------------
+# Install custom commands
+# ---------------------------------------------------------------------------
+echo ""
+echo "-> Installing custom commands ..."
+for cmd_file in "$REPO_ROOT/commands/"*.md; do
+  if [[ -f "$cmd_file" ]]; then
+    cp "$cmd_file" "$COMMANDS_DIR/"
+    echo "  ok Installed command '$(basename "$cmd_file" .md)'"
+  fi
+done
 
 # ---------------------------------------------------------------------------
 # Merge permission config into opencode.json
