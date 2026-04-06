@@ -95,8 +95,16 @@ slide.addShape(pres.shapes.RECTANGLE, {
 
 slide.addShape(pres.shapes.OVAL, { x: 4, y: 1, w: 2, h: 2, fill: { color: "8FA1FF" } });
 
-slide.addShape(pres.shapes.LINE, {
-  x: 1, y: 3, w: 5, h: 0, line: { color: "943C31", width: 3, dashType: "dash" }
+// Horizontal line — use a thin filled rectangle, NOT a LINE shape (see Common Pitfalls)
+slide.addShape(pres.shapes.RECTANGLE, {
+  x: 1, y: 3, w: 5, h: 0.02,
+  fill: { color: "943C31" }, line: { width: 0 }
+});
+
+// Vertical line — same pattern, swap w/h
+slide.addShape(pres.shapes.RECTANGLE, {
+  x: 3, y: 1, w: 0.02, h: 2.5,
+  fill: { color: "943C31" }, line: { width: 0 }
 });
 
 // With transparency
@@ -401,7 +409,16 @@ titleSlide.addText("My Title", { placeholder: "title" });
    slide.addShape(pres.shapes.RECTANGLE, { shadow: makeShadow(), ... });
    ```
 
-8. **Don't use `ROUNDED_RECTANGLE` with accent borders** - rectangular overlay bars won't cover rounded corners. Use `RECTANGLE` instead.
+8. **NEVER use LINE shapes with `w: 0` or `h: 0`** — they render inconsistently across PowerPoint versions and can produce invisible or corrupt shapes. Use a thin filled `RECTANGLE` (0.02" in the narrow dimension) instead.
+   ```javascript
+   // ❌ WRONG: LINE with zero dimension
+   slide.addShape(pres.shapes.LINE, { x: 1, y: 3, w: 5, h: 0, line: { color: "943C31", width: 2 } });
+
+   // ✅ CORRECT: Thin filled rectangle
+   slide.addShape(pres.shapes.RECTANGLE, { x: 1, y: 3, w: 5, h: 0.02, fill: { color: "943C31" }, line: { width: 0 } });
+   ```
+
+9. **Don't use `ROUNDED_RECTANGLE` with accent borders** - rectangular overlay bars won't cover rounded corners. Use `RECTANGLE` instead.
    ```javascript
    // ❌ WRONG: Accent bar doesn't cover rounded corners
    slide.addShape(pres.shapes.ROUNDED_RECTANGLE, { x: 1, y: 1, w: 3, h: 1.5, fill: { color: "FFFFFF" } });
@@ -416,7 +433,7 @@ titleSlide.addText("My Title", { placeholder: "title" });
 
 ## Quick Reference
 
-- **Shapes**: RECTANGLE, OVAL, LINE, ROUNDED_RECTANGLE
+- **Shapes**: RECTANGLE, OVAL, ROUNDED_RECTANGLE (avoid LINE — use thin filled RECTANGLEs instead)
 - **Charts**: BAR, LINE, PIE, DOUGHNUT, SCATTER, BUBBLE, RADAR
 - **Layouts**: LAYOUT_16x9 (10"×5.625"), LAYOUT_16x10, LAYOUT_4x3, LAYOUT_WIDE
 - **Alignment**: "left", "center", "right"

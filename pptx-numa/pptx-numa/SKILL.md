@@ -366,12 +366,14 @@ Do not use section indicators when the deck has 3 or fewer agenda sections — w
 | Left-side "statement" text | Play | 28-36pt | Regular, `F26B43` (orange) |
 | Body text | Play | 14-16pt | Regular, `000000` |
 | Bold inline labels | Play | 14-16pt | Bold, `0E2841` |
-| Captions/footnotes | Play | 10-12pt | Regular, `C0A883` (tan) or `C6C6D0` (gray) |
+| Captions/footnotes | Play | 12pt | Regular, `C0A883` (tan) or `C6C6D0` (gray) |
 | Stat numbers | Play | 60-72pt | Bold, `FFFFFF` (inside colored circles) |
 | Agenda topic text | Play | 16-18pt | Bold, `0E2841` (navy) |
 | Squared/circled numbers | Play | 14-18pt | Bold, `FFFFFF` on colored fill |
 
 **Title font size is locked at 34pt. Do not use a range. The template enforces this via the slide layout definition.**
+
+**Minimum font size is 12pt — nothing smaller may appear on any slide.** Prefer 14pt where space allows. The only element at the 12pt floor is captions/footnotes; everything else should be 14pt or larger.
 
 These fonts are embedded in the template (`ppt/fonts/`). When working from the template (the default workflow), fonts are inherited automatically — do not specify `fontFace` in pptxgenjs or override font attributes in XML unless you have a specific reason.
 
@@ -480,6 +482,7 @@ When building a deck, follow this ordering:
 - **Don't skip the title slide placeholders** — always fill in the ctrTitle and subTitle from the template
 - **Don't use `LAYOUT_16x9`** — always use `LAYOUT_WIDE` (13.33" × 7.50") to match the Numa template; `LAYOUT_16x9` creates smaller slides that leave the bottom-right empty
 - **Don't combine straight-edged accent bars with rounded-corner shapes** — if a shape has rounded corners (`ROUNDED_RECTANGLE`), any accent bar or border overlay must also have rounded corners, or more practically: use `RECTANGLE` (straight corners) for shapes that have accent bars. The straight bar won't cover the rounded corners and creates a visual glitch.
+- **Don't use font sizes below 12pt** — 12pt is the absolute floor (captions/footnotes only). Prefer 14pt where space allows. If content doesn't fit at 12pt, reduce the content rather than the font size.
 
 ### Color Consistency Across Slides
 

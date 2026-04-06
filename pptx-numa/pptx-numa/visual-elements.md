@@ -63,7 +63,7 @@ blocks.forEach(b => {
   });
   slide.addText(b.body, {
     x: b.x + 0.3, y: 2.9, w: 3.2, h: 2.2,
-    fontSize: 13, color: "FFFFFF",
+    fontSize: 14, color: "FFFFFF",
   });
 });
 ```
