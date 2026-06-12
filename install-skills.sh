@@ -263,6 +263,12 @@ install_local_skill "ask-linkedin-post" "ask-linkedin-post"
 install_local_skill "ask-linkedin-profile" "ask-linkedin-profile"
 
 # ---------------------------------------------------------------------------
+# Install local skills: float-deck and float-pdf
+# ---------------------------------------------------------------------------
+install_local_skill "float-deck" "float-deck"
+install_local_skill "float-pdf" "float-pdf"
+
+# ---------------------------------------------------------------------------
 # Install custom commands
 # ---------------------------------------------------------------------------
 echo ""
@@ -310,7 +316,9 @@ jq '
                   "lead-magnet": "allow",
                   "nano-banana-use": "allow",
                   "nano-banana-prompts": "allow",
-                  "caveman": "allow"
+                  "caveman": "allow",
+                  "float-deck": "allow",
+                  "float-pdf": "allow"
                 }
               }
             )

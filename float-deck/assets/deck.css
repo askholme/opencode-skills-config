@@ -1,0 +1,1079 @@
+/* ==========================================================================
+   deck.css — Float brand tokens + deck structural/component styles
+   Generic class names. Zero Danish/Float copy strings.
+   Scroller = window. CSS snap active only when html:not(.lenis-on).
+   ========================================================================== */
+
+/* ---------- Brand tokens -------------------------------------------------- */
+:root {
+  /* Palette */
+  --ink:        #0A0E14;
+  --ink-soft:   #11161E;
+  --ink-line:   #1C232E;
+  --cream:      #F2EDE3;
+  --cream-soft: #E8E1D2;
+  --cream-dim:  #A39E91;
+  --mint:       #B8F2D6;
+  --mint-bright:#6BE3A8;
+  --tide:       #7AA8E0;
+  --coral:      #FF8B6B;
+
+  /* Semantic aliases */
+  --bg:         var(--ink);
+  --text:       var(--cream);
+  --accent:     var(--mint);
+  --secondary:  var(--tide);
+  --warning:    var(--coral);
+  --rule:       var(--ink-line);
+  --card-bg:    var(--ink-soft);
+
+  /* Typography families */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'Inter', -apple-system, system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* ---------- Reset & base -------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01", "cv11";
+}
+
+body {
+  min-height: 100vh;
+}
+
+/* ---------- CSS scroll-snap (window scroller) ----------------------------- */
+/* Active only when Lenis is NOT running. When html.lenis-on is set by JS,
+   these rules become inert so Lenis Snap can take over exclusively. */
+html:not(.lenis-on) {
+  scroll-snap-type: y mandatory;
+}
+
+html:not(.lenis-on) .slide {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* ---------- Background layer --------------------------------------------- */
+#bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse at 72% 20%, rgba(184, 242, 214, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 18% 85%, rgba(122, 168, 224, 0.06) 0%, transparent 50%),
+    var(--bg);
+  pointer-events: none;
+}
+
+/* ---------- Deck container (plain flow; NOT the scroller) ----------------- */
+#deck {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Slides -------------------------------------------------------- */
+.slide {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6vh 8vw;
+  background: transparent;
+  overflow: hidden;
+}
+
+.inner {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.slide--title .inner {
+  max-width: 1000px;
+}
+
+/* Title slide: hero h1 is the biggest type in the deck — Float hero scale.
+   white-space:nowrap keeps "I gang med AI" on one line; the 7vw term scales
+   the font down on narrow viewports so it never overflows. max-width:none
+   removes the earlier 14ch wrap constraint (opposite of what we now want). */
+.slide--title h1 {
+  font-size: clamp(2.5rem, 7vw, 6.5rem);
+  font-weight: 300;
+  line-height: 1.0;
+  letter-spacing: -0.04em;
+  opacity: 1;
+  margin-bottom: 0.4em;
+  white-space: nowrap;
+  max-width: none;
+}
+
+/* Title slide: subtitle uses Fraunces Light (not Inter) — Float hero composition:
+   mono eyebrow + Fraunces display + Fraunces subhead. Inter never on hero face. */
+.slide--title .lede {
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(1.1rem, 1.8vw, 1.6rem);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--cream-soft);
+  opacity: 1;
+  max-width: 30em;
+}
+
+/* ---------- Navigation dots ----------------------------------------------- */
+#slide-nav {
+  position: fixed;
+  right: 1.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+#slide-nav .nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cream-dim);
+  opacity: 0.4;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.25s, opacity 0.25s;
+  border: none;
+  padding: 0;
+}
+
+#slide-nav .nav-dot:hover {
+  background: var(--cream-soft);
+  opacity: 0.7;
+}
+
+#slide-nav .nav-dot.active {
+  background: var(--mint);
+  opacity: 1;
+  transform: scale(1.5);
+}
+
+/* ---------- Typography ---------------------------------------------------- */
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 9rem);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.04em;
+  margin: 0 0 1.2rem;
+  color: var(--cream);
+}
+
+h2 {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5.5vw, 5.5rem);
+  font-weight: 300;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin: 0 0 1.2rem;
+  color: var(--cream);
+}
+
+h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin: 0 0 0.4rem;
+  letter-spacing: -0.02em;
+  color: var(--cream);
+}
+
+h4 {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 400;
+  margin: 0 0 0.35rem;
+  color: var(--cream);
+}
+
+p {
+  line-height: 1.55;
+  color: var(--cream-soft);
+  font-size: 1.05rem;
+}
+
+/* Accent: one italic emphasis word per heading — mint + Fraunces italic */
+.accent,
+em.accent {
+  color: var(--mint);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* Eyebrow label: JetBrains Mono, uppercase, tracked, cream-dim (muted metadata) */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  margin-bottom: 0.9rem;
+  display: block;
+}
+
+.eyebrow--tide {
+  color: var(--tide);
+}
+
+.eyebrow--coral {
+  color: var(--coral);
+}
+
+/* Lede: larger cream-soft intro paragraph */
+.lede {
+  font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+  color: var(--cream-soft);
+  max-width: 52em;
+  margin-bottom: 1.2rem;
+  line-height: 1.55;
+}
+
+/* Caption / footnote */
+.caption {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--cream-dim);
+  margin-top: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.caption.centered {
+  text-align: center;
+}
+
+/* ---------- Cards & pills ------------------------------------------------- */
+.card,
+.pill {
+  background: var(--card-bg);
+  border: 1px solid var(--ink-line);
+  border-radius: 1rem;
+  padding: 1.2rem 1.4rem;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.card {
+  border-top: 2px solid rgba(184, 242, 214, 0.20);
+}
+
+.card:hover {
+  border-color: rgba(184, 242, 214, 0.25);
+  background: rgba(184, 242, 214, 0.04);
+}
+
+.pill {
+  border-radius: 1rem;
+  padding: 0.7rem 1.1rem;
+}
+
+.pill:hover {
+  border-color: rgba(184, 242, 214, 0.25);
+}
+
+.card p,
+.pill p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Pill label (mono eyebrow inside a pill) */
+.pill-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tide);
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+/* ---------- Two-track columns --------------------------------------------- */
+.two-tracks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.track-col {
+  background: var(--card-bg);
+  border: 1px solid var(--ink-line);
+  border-radius: 1rem;
+  padding: 1.4rem 1.5rem;
+  transition: border-color 0.3s ease;
+}
+
+.track-col:hover {
+  border-color: rgba(184, 242, 214, 0.20);
+}
+
+.track-header {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 0.7rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--ink-line);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+/* Mint variant — individual productivity track */
+.track-header--ind {
+  color: var(--mint);
+  border-bottom-color: rgba(184, 242, 214, 0.18);
+}
+
+/* Tide variant — process embedding track */
+.track-header--org {
+  color: var(--tide);
+  border-bottom-color: rgba(122, 168, 224, 0.18);
+}
+
+.track-col h4 {
+  font-size: 1rem;
+  color: var(--cream);
+  margin-bottom: 0.7rem;
+}
+
+.work-lede {
+  font-size: 0.9rem;
+  color: var(--cream-soft);
+  margin: 0 0 0.9rem;
+  line-height: 1.55;
+}
+
+.work-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.work-list li {
+  padding: 0.45rem 0 0.45rem 1rem;
+  border-bottom: 1px solid var(--ink-line);
+  position: relative;
+  color: var(--cream-soft);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.work-list li:last-child {
+  border-bottom: 0;
+}
+
+.work-list li::before {
+  content: "/";
+  position: absolute;
+  left: 0;
+  color: var(--mint);
+  font-weight: 500;
+  font-size: 0.88rem;
+}
+
+/* ---------- Level-ladder component ----------------------------------------
+   Used for 5-level progression slides (individual productivity / process
+   embedding). Each .ladder-step contains:
+     .ladder-badge  — level number
+     .ladder-body   — title + description
+     .ladder-chip   — gain/benefit label
+   Accent variants: .level-ladder--mint (default) / .level-ladder--tide
+   ========================================================================== */
+.level-ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+
+.ladder-step {
+  display: grid;
+  grid-template-columns: 2.4rem 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--ink-line);
+  border-radius: 0.75rem;
+  padding: 0.85rem 1.1rem;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.ladder-step:hover {
+  background: rgba(184, 242, 214, 0.03);
+  border-color: rgba(184, 242, 214, 0.18);
+}
+
+/* Tide-accented ladder */
+.level-ladder--tide .ladder-step:hover {
+  background: rgba(122, 168, 224, 0.03);
+  border-color: rgba(122, 168, 224, 0.18);
+}
+
+/* Highlighted step — draws attention to a notable level (e.g. a common stopping point) */
+.ladder-step--highlight {
+  border-color: rgba(255, 139, 107, 0.30);
+  background: rgba(255, 139, 107, 0.04);
+}
+
+.ladder-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-align: center;
+  color: var(--mint);
+  background: rgba(184, 242, 214, 0.08);
+  border: 1px solid rgba(184, 242, 214, 0.18);
+  border-radius: 0.4rem;
+  padding: 0.25rem 0.3rem;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* Tide badge variant */
+.level-ladder--tide .ladder-badge {
+  color: var(--tide);
+  background: rgba(122, 168, 224, 0.08);
+  border-color: rgba(122, 168, 224, 0.18);
+}
+
+.ladder-body {
+  min-width: 0;
+}
+
+.ladder-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--cream);
+  margin: 0 0 0.15rem;
+  line-height: 1.3;
+}
+
+.ladder-desc {
+  font-size: 0.82rem;
+  color: var(--cream-dim);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.ladder-chip {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--mint);
+  background: rgba(184, 242, 214, 0.08);
+  border: 1px solid rgba(184, 242, 214, 0.15);
+  border-radius: 0.35rem;
+  padding: 0.2rem 0.5rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Tide chip variant */
+.level-ladder--tide .ladder-chip {
+  color: var(--tide);
+  background: rgba(122, 168, 224, 0.08);
+  border-color: rgba(122, 168, 224, 0.15);
+}
+
+/* Coral chip for warning/highlight steps */
+.ladder-chip--coral {
+  color: var(--coral);
+  background: rgba(255, 139, 107, 0.08);
+  border-color: rgba(255, 139, 107, 0.20);
+}
+
+/* ---------- Use-case quad grid (2×2) -------------------------------------- */
+.quad {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  margin-top: 1.2rem;
+}
+
+.quad .card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.quad .card h3 {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--cream);
+  margin: 0;
+}
+
+.quad .card p {
+  font-size: 0.9rem;
+  color: var(--cream-soft);
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ---------- CTA / centered layout ----------------------------------------- */
+.slide--cta {
+  text-align: center;
+}
+
+.slide--cta .inner {
+  max-width: 800px;
+}
+
+.slide--cta h2 {
+  font-size: clamp(2rem, 4.2vw, 3.6rem);
+  margin-bottom: 1.4rem;
+}
+
+.cta-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-person {
+  background: var(--card-bg);
+  border: 1px solid var(--ink-line);
+  border-radius: 1rem;
+  padding: 1.4rem 2rem;
+  text-align: center;
+  min-width: 260px;
+}
+
+.cta-person--primary {
+  border-top: 2px solid rgba(184, 242, 214, 0.30);
+}
+
+.cta-person--secondary {
+  border-top: 2px solid rgba(122, 168, 224, 0.20);
+}
+
+.cta-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 300;
+  color: var(--cream);
+  margin-bottom: 0.3rem;
+}
+
+.cta-role {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mint);
+  margin-bottom: 0.8rem;
+  display: block;
+}
+
+.cta-role--tide {
+  color: var(--tide);
+}
+
+.cta-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.cta-items li {
+  font-size: 0.88rem;
+  color: var(--cream-soft);
+  padding: 0.3rem 0 0.3rem 1rem;
+  border-bottom: 1px solid var(--ink-line);
+  position: relative;
+  line-height: 1.45;
+}
+
+.cta-items li:last-child {
+  border-bottom: 0;
+}
+
+.cta-items li::before {
+  content: "/";
+  position: absolute;
+  left: 0;
+  color: var(--mint);
+  font-weight: 500;
+}
+
+.cta-items--tide li::before {
+  color: var(--tide);
+}
+
+/* ---------- Counterpoint / caution block ---------------------------------- */
+.counterpoint {
+  margin-top: 1.8rem;
+  padding: 1rem 1.4rem;
+  border-left: 2px solid var(--coral);
+  background: rgba(255, 139, 107, 0.05);
+  border-radius: 0 0.5rem 0.5rem 0;
+  font-size: 1.05rem;
+  color: var(--cream-soft);
+  line-height: 1.65;
+}
+
+.counterpoint strong {
+  color: var(--coral);
+}
+
+/* Pitfall list inside counterpoint */
+.pitfall-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.2rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.pitfall-list li {
+  background: var(--card-bg);
+  border: 1px solid var(--ink-line);
+  border-left: 2px solid rgba(255, 139, 107, 0.40);
+  border-radius: 0 0.75rem 0.75rem 0;
+  padding: 0.8rem 1.1rem;
+  font-size: 0.95rem;
+  color: var(--cream-soft);
+  line-height: 1.5;
+}
+
+.pitfall-list li strong {
+  color: var(--coral);
+  display: block;
+  font-size: 0.82rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.2rem;
+}
+
+/* ---------- Team grid ----------------------------------------------------- */
+.team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+.team-member {
+  text-align: center;
+  width: calc(20% - 1rem);
+  min-width: 100px;
+}
+
+.team-photo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--ink-line);
+  margin-bottom: 0.5rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.team-name {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--cream);
+  line-height: 1.3;
+  margin-bottom: 0.15rem;
+}
+
+.team-role {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--cream-dim);
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+}
+
+/* ---------- Grain overlay ------------------------------------------------- */
+/* Float SVG fractalNoise texture. mix-blend-mode:screen at .06 opacity
+   is perceptible on near-black ink (overlay@.04 is invisible on dark bg). */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  mix-blend-mode: screen;
+  opacity: 0.06;
+}
+
+/* ---------- Scroll reveal ------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered delays for sequential children */
+.slide.active .reveal:nth-child(1)  { transition-delay: 0.04s; }
+.slide.active .reveal:nth-child(2)  { transition-delay: 0.12s; }
+.slide.active .reveal:nth-child(3)  { transition-delay: 0.22s; }
+.slide.active .reveal:nth-child(4)  { transition-delay: 0.34s; }
+.slide.active .reveal:nth-child(5)  { transition-delay: 0.46s; }
+.slide.active .reveal:nth-child(6)  { transition-delay: 0.58s; }
+
+/* Longer reveal variant for hero elements */
+.reveal--slow {
+  transition-duration: 1.2s;
+}
+
+/* ---------- Float-bob animation ------------------------------------------- */
+@keyframes float-bob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
+}
+
+.float-bob {
+  animation: float-bob 6s ease-in-out infinite;
+}
+
+/* ---------- Float logo wave drift ----------------------------------------- */
+/* Paths are built 3× viewBox-wide so a -100-unit shift loops seamlessly.
+   linear easing is required — any other curve exposes the loop seam. */
+@keyframes float-wave-drift {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100px); }
+}
+
+.float-wave--back  { animation: float-wave-drift 6s linear infinite; }
+.float-wave--front { animation: float-wave-drift 8s linear infinite; }
+
+/* ---------- Fullscreen & zoom controls ------------------------------------ */
+#zoom-controls {
+  position: fixed;
+  bottom: 1.4rem;
+  right: 3.6rem;
+  z-index: 200;
+  display: none;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.is-fullscreen #zoom-controls {
+  display: flex;
+}
+
+#zoom-controls button {
+  width: 28px;
+  height: 28px;
+  background: transparent;
+  border: 1px solid var(--cream-dim);
+  border-radius: 5px;
+  color: var(--cream-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: border-color 0.2s, color 0.2s;
+  opacity: 0.5;
+}
+
+#zoom-controls button:hover {
+  border-color: var(--cream-soft);
+  color: var(--cream-soft);
+  opacity: 0.8;
+}
+
+#zoom-controls button svg {
+  width: 12px;
+  height: 12px;
+}
+
+#zoom-level {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--cream-dim);
+  min-width: 2.4rem;
+  text-align: center;
+  letter-spacing: 0.04em;
+  opacity: 0.5;
+}
+
+#fs-btn {
+  position: fixed;
+  bottom: 1.4rem;
+  right: 1.6rem;
+  z-index: 200;
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border: 1px solid var(--cream-dim);
+  border-radius: 5px;
+  color: var(--cream-dim);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: border-color 0.2s, color 0.2s;
+  opacity: 0.5;
+}
+
+#fs-btn:hover {
+  border-color: var(--cream-soft);
+  color: var(--cream-soft);
+  opacity: 0.8;
+}
+
+#fs-btn svg {
+  width: 13px;
+  height: 13px;
+  display: block;
+}
+
+/* ---------- Responsive ---------------------------------------------------- */
+@media (max-width: 900px) {
+  .two-tracks {
+    grid-template-columns: 1fr;
+  }
+
+  .quad {
+    grid-template-columns: 1fr;
+  }
+
+  .team-member {
+    width: calc(33.333% - 0.8rem);
+  }
+
+  #slide-nav {
+    right: 0.6rem;
+  }
+
+  .slide {
+    padding: 4vh 5vw;
+  }
+
+  .cta-block {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-person {
+    min-width: unset;
+  }
+
+  .ladder-step {
+    grid-template-columns: 2rem 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .ladder-chip {
+    grid-column: 2;
+    justify-self: start;
+    margin-top: 0.2rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .team-member {
+    width: calc(50% - 0.6rem);
+  }
+
+  h1 {
+    font-size: clamp(2.2rem, 9vw, 3.5rem);
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 7vw, 2.8rem);
+  }
+
+  .slide--title h1 {
+    /* nowrap heading: 7vw at 360px ≈ 25px, floored by clamp min 1.6rem (≈26px).
+       "I gang med AI" at ~1.6rem × 13 chars ≈ 220px — fits a 360px viewport. */
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+  }
+}
+
+/* ---------- Utility: slide logo lockup ------------------------------------ */
+/* Positions a logo/brand lockup absolutely in the top-right of .inner.
+   Apply to the .inner element: <div class="inner slide-logo-inner">
+   and wrap the logo in <div class="slide-logo-lockup">. */
+.slide-logo-inner {
+  position: relative;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+}
+
+/* Reduce logo-clearance padding on small phones: 3rem each side (96px total)
+   is disproportionate when the mobile hero is already as small as 2.8rem (45px).
+   1.5rem each side (48px total) gives the logo its zone without crowding content.
+   This @media block must appear AFTER the base .slide-logo-inner rule so the
+   override wins in the cascade. */
+@media (max-width: 600px) {
+  .slide-logo-inner {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+}
+
+.slide-logo-lockup {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--mint);
+}
+
+/* ---------- Utility: agenda numbered list --------------------------------- */
+/* Mono-numbered agenda list. Each .agenda-item has a .agenda-num and a span. */
+.agenda-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.agenda-item {
+  display: flex;
+  align-items: baseline;
+  gap: 1.2rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--ink-line);
+}
+
+.agenda-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.agenda-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--mint);
+  min-width: 2rem;
+  flex-shrink: 0;
+}
+
+.agenda-text {
+  font-size: 1.05rem;
+  color: var(--cream-soft);
+  line-height: 1.45;
+}
+
+/* ---------- Utility: coral inline note ------------------------------------ */
+/* Inline mono note in coral — used for "Her stopper de fleste" etc. */
+.coral-note {
+  font-style: normal;
+  color: var(--coral);
+  font-size: 0.78rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.06em;
+}
+
+/* ---------- Level-ladder compact variant ---------------------------------- */
+/* .level-ladder--mini: tight single-line rows for use inside constrained
+   containers (e.g. .track-col). Shows badge + title only; hides desc + chip.
+   Inherits mint/tide accent from a sibling .level-ladder--tide modifier.
+   Reusable in any deck that needs a compact ladder inside a column. */
+.level-ladder--mini {
+  gap: 0.3rem;
+  margin-top: 0.8rem;
+}
+
+.level-ladder--mini .ladder-step {
+  grid-template-columns: 2rem 1fr;
+  padding: 0.45rem 0.75rem;
+  gap: 0.65rem;
+  border-radius: 0.5rem;
+}
+
+.level-ladder--mini .ladder-badge {
+  font-size: 0.6rem;
+  padding: 0.18rem 0.22rem;
+  border-radius: 0.3rem;
+}
+
+.level-ladder--mini .ladder-title {
+  font-size: 0.82rem;
+  font-weight: 400;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.level-ladder--mini .ladder-desc,
+.level-ladder--mini .ladder-chip {
+  display: none;
+}
+
+/* ---------- Utility: tabular numbers -------------------------------------- */
+/* Float brand pattern for numeric slides — tabular figures + existing
+   font-feature-settings (ss01 + cv11 from html) extended with tnum. */
+.tabular-nums {
+  font-feature-settings: "ss01", "cv11", "tnum";
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Reduced motion ------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .reveal.in {
+    opacity: 1;
+    transform: none;
+  }
+
+  .float-bob {
+    animation: none;
+  }
+
+  @keyframes float-bob {
+    0%, 50%, 100% { transform: translateY(0); }
+  }
+
+  .float-wave--back,
+  .float-wave--front { animation: none; }
+}

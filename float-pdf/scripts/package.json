@@ -1,0 +1,14 @@
+{
+  "name": "float-pdf-renderer",
+  "private": true,
+  "type": "module",
+  "description": "Self-contained Playwright renderer for Float landscape-A4 PDFs. Run `npm run setup` once.",
+  "scripts": {
+    "setup": "npm install && npx playwright install chromium",
+    "render": "node render-pdf.mjs",
+    "bake-grain": "node bake-grain.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.58.2"
+  }
+}

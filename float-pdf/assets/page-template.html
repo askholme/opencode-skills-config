@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Float — DOCUMENT TITLE</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Float landscape-A4 layout + brand tokens -->
+  <link rel="stylesheet" href="page.css" />
+</head>
+<body>
+
+<!--
+  Each <section class="page"> is one 297x210mm landscape page.
+  Duplicate the logo lockup on every page; give each SVG UNIQUE ids
+  (float-circle-1 / float-grad-1, -2, -3 …) so clip/gradient refs don't collide.
+  Build the page numbers (NN / TOTAL) and footer-meta consistently.
+-->
+
+<!-- ===== PAGE 1 — e.g. SITUATION (two info cards) ===== -->
+<section class="page">
+  <div class="logo-lockup">
+    <svg width="38" height="38" viewBox="0 0 100 100" aria-label="Float" role="img">
+      <defs>
+        <clipPath id="float-circle-1"><circle cx="50" cy="50" r="46"></circle></clipPath>
+        <linearGradient id="float-grad-1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#B8F2D6"></stop>
+          <stop offset="100%" stop-color="#7AA8E0"></stop>
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="2"></circle>
+      <g clip-path="url(#float-circle-1)">
+        <path d="M -100 60 Q -75 50 -50 60 T 0 60 T 50 60 T 100 60 T 150 60 T 200 60 L 200 110 L -100 110 Z" fill="url(#float-grad-1)"></path>
+        <path d="M -100 68 Q -75 60 -50 68 T 0 68 T 50 68 T 100 68 T 150 68 T 200 68 L 200 110 L -100 110 Z" fill="#B8F2D6" opacity="0.35"></path>
+      </g>
+    </svg>
+    <span>Float</span>
+  </div>
+
+  <span class="eyebrow">FORSLAG · UNDERTITEL</span>
+  <h1>Overskrift med <em class="accent">accent</em></h1>
+  <p class="lede">Framing-paragraf. Hold den kort.</p>
+
+  <div class="card-grid">
+    <div class="info-card">
+      <span class="card-tag">Case 01 · Tag</span>
+      <h3>Korttitel <span class="prio-pill prio-pill--primary">Primær fokus</span></h3>
+      <p>Beskrivelse.</p>
+      <div class="metric-row">
+        <div class="metric"><span class="num">500–700</span><span class="label">Enhed</span></div>
+        <div class="metric"><span class="num">Type</span><span class="label">Label</span></div>
+      </div>
+    </div>
+    <div class="info-card info-card--alert">
+      <span class="card-tag card-tag--alert">Case 02 · Tag</span>
+      <h3>Korttitel <span class="prio-pill prio-pill--secondary">Sekundær</span></h3>
+      <p>Beskrivelse.</p>
+      <div class="metric-row">
+        <div class="metric metric--alert"><span class="num">~20</span><span class="label">Enhed</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-meta">
+    <span>Float · AI-native strategi &amp; implementering</span>
+    <span>01 / 04 · Situation</span>
+  </div>
+</section>
+
+<!-- ===== PAGE 2 — e.g. PROCESS (3 steps) ===== -->
+<section class="page">
+  <div class="logo-lockup">
+    <svg width="38" height="38" viewBox="0 0 100 100" aria-label="Float" role="img">
+      <defs>
+        <clipPath id="float-circle-2"><circle cx="50" cy="50" r="46"></circle></clipPath>
+        <linearGradient id="float-grad-2" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#B8F2D6"></stop>
+          <stop offset="100%" stop-color="#7AA8E0"></stop>
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="2"></circle>
+      <g clip-path="url(#float-circle-2)">
+        <path d="M -100 60 Q -75 50 -50 60 T 0 60 T 50 60 T 100 60 T 150 60 T 200 60 L 200 110 L -100 110 Z" fill="url(#float-grad-2)"></path>
+        <path d="M -100 68 Q -75 60 -50 68 T 0 68 T 50 68 T 100 68 T 150 68 T 200 68 L 200 110 L -100 110 Z" fill="#B8F2D6" opacity="0.35"></path>
+      </g>
+    </svg>
+    <span>Float</span>
+  </div>
+
+  <span class="eyebrow">OPLÆG</span>
+  <h2>Tre skridt til <em class="accent">løsning</em></h2>
+  <p class="lede">Framing.</p>
+
+  <div class="steps">
+    <div class="step">
+      <span class="step-num">01</span>
+      <h3>Forberedelse</h3>
+      <span class="sub">Undertekst</span>
+      <ul class="step-list"><li>Punkt</li><li>Punkt med <em>vægt</em></li></ul>
+    </div>
+    <div class="step">
+      <span class="step-num">02</span>
+      <h3>Workshop</h3>
+      <span class="sub">Undertekst</span>
+      <ul class="step-list"><li>Punkt</li><li>Punkt</li></ul>
+    </div>
+    <div class="step">
+      <span class="step-num">03</span>
+      <h3>Leverance</h3>
+      <span class="sub">Undertekst</span>
+      <ul class="step-list"><li>Punkt <span class="coral-note">note</span></li></ul>
+    </div>
+  </div>
+
+  <div class="footer-meta">
+    <span>Float · AI-native strategi &amp; implementering</span>
+    <span>02 / 04 · Oplæg</span>
+  </div>
+</section>
+
+<!-- ===== PAGE 3 — e.g. PRICING (single anchor card) ===== -->
+<section class="page">
+  <div class="logo-lockup">
+    <svg width="38" height="38" viewBox="0 0 100 100" aria-label="Float" role="img">
+      <defs>
+        <clipPath id="float-circle-3"><circle cx="50" cy="50" r="46"></circle></clipPath>
+        <linearGradient id="float-grad-3" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#B8F2D6"></stop>
+          <stop offset="100%" stop-color="#7AA8E0"></stop>
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="2"></circle>
+      <g clip-path="url(#float-circle-3)">
+        <path d="M -100 60 Q -75 50 -50 60 T 0 60 T 50 60 T 100 60 T 150 60 T 200 60 L 200 110 L -100 110 Z" fill="url(#float-grad-3)"></path>
+        <path d="M -100 68 Q -75 60 -50 68 T 0 68 T 50 68 T 100 68 T 150 68 T 200 68 L 200 110 L -100 110 Z" fill="#B8F2D6" opacity="0.35"></path>
+      </g>
+    </svg>
+    <span>Float</span>
+  </div>
+
+  <span class="eyebrow">ØKONOMI</span>
+  <h2>Én pakke, <em class="accent">fast</em> pris</h2>
+  <p class="lede">Framing.</p>
+
+  <div class="price-solo">
+    <div class="price-card price-card--anchor">
+      <span class="price-tier">Pakkenavn</span>
+      <h3>Titel</h3>
+      <div class="price-amount"><span class="price-was">15.000 kr.</span> <span class="price-now">10.000 kr.</span><small>Fast pris · ekskl. moms</small></div>
+      <p class="price-discount"><strong>Rabat:</strong> betingelse.</p>
+      <p class="price-desc">Kort beskrivelse af leverancen.</p>
+      <ul class="feature-list">
+        <li>Leverance</li>
+        <li>Leverance med <strong>vægt</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="scope-note"><strong>Sådan er det skruet sammen.</strong> Note om scope og tilkøb.</div>
+
+  <div class="footer-meta">
+    <span>Float · AI-native strategi &amp; implementering</span>
+    <span>03 / 04 · Økonomi</span>
+  </div>
+</section>
+
+<!-- ===== PAGE 4 — e.g. ACCEPT / SIGNATURE ===== -->
+<section class="page">
+  <div class="logo-lockup">
+    <svg width="38" height="38" viewBox="0 0 100 100" aria-label="Float" role="img">
+      <defs>
+        <clipPath id="float-circle-4"><circle cx="50" cy="50" r="46"></circle></clipPath>
+        <linearGradient id="float-grad-4" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#B8F2D6"></stop>
+          <stop offset="100%" stop-color="#7AA8E0"></stop>
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="2"></circle>
+      <g clip-path="url(#float-circle-4)">
+        <path d="M -100 60 Q -75 50 -50 60 T 0 60 T 50 60 T 100 60 T 150 60 T 200 60 L 200 110 L -100 110 Z" fill="url(#float-grad-4)"></path>
+        <path d="M -100 68 Q -75 60 -50 68 T 0 68 T 50 68 T 100 68 T 150 68 T 200 68 L 200 110 L -100 110 Z" fill="#B8F2D6" opacity="0.35"></path>
+      </g>
+    </svg>
+    <span>Float</span>
+  </div>
+
+  <span class="eyebrow">AFTALE</span>
+  <h2>Accept af <em class="accent">tilbud</em></h2>
+  <p class="accept-intro">Ved underskrift accepterer parterne forslaget som beskrevet. <strong>Reify ApS' standardvilkår</strong> udgør en integreret del af aftalen.</p>
+
+  <div class="sign-grid">
+    <div class="sign-card">
+      <span class="sign-label">For leverandør</span>
+      <div class="sign-party">Float — a brand of Reify ApS</div>
+      <div class="sign-field"><span class="sign-field-label">Navn</span><span class="sign-field-value">Ask Holme</span></div>
+      <div class="sign-field"><span class="sign-field-label">Dato</span><span class="sign-field-value sign-field-value--blank">&nbsp;</span></div>
+      <div class="sign-field sign-field--tall"><span class="sign-field-label">Underskrift</span><span class="sign-field-value">&nbsp;</span></div>
+    </div>
+    <div class="sign-card sign-card--counter">
+      <span class="sign-label">For kunden</span>
+      <div class="sign-party">Kundens navn</div>
+      <div class="sign-field"><span class="sign-field-label">Navn</span><span class="sign-field-value sign-field-value--blank">&nbsp;</span></div>
+      <div class="sign-field"><span class="sign-field-label">Dato</span><span class="sign-field-value sign-field-value--blank">&nbsp;</span></div>
+      <div class="sign-field sign-field--tall"><span class="sign-field-label">Underskrift</span><span class="sign-field-value sign-field-value--blank">&nbsp;</span></div>
+    </div>
+  </div>
+
+  <div class="footer-meta">
+    <span>Float · AI-native strategi &amp; implementering</span>
+    <span>04 / 04 · Accept af tilbud</span>
+  </div>
+</section>
+
+<!--
+  Optional appendix: standard terms pages use <section class="page page--terms">
+  with a .terms-header and a .terms-columns block (2-column fine print).
+  See references/terms.md for the full Reify ApS standardvilkår markup (§§ 1–12).
+-->
+
+</body>
+</html>
