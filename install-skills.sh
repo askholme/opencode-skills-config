@@ -259,14 +259,58 @@ install_local_skill "caveman" "caveman"
 # ---------------------------------------------------------------------------
 install_local_skill "ask-linkedin-audit" "ask-linkedin-audit"
 install_local_skill "ask-linkedin-calendar" "ask-linkedin-calendar"
-install_local_skill "ask-linkedin-post" "ask-linkedin-post"
-install_local_skill "ask-linkedin-profile" "ask-linkedin-profile"
 
 # ---------------------------------------------------------------------------
 # Install local skills: float-deck and float-pdf
 # ---------------------------------------------------------------------------
 install_local_skill "float-deck" "float-deck"
 install_local_skill "float-pdf" "float-pdf"
+
+# ---------------------------------------------------------------------------
+# Set up Playwright/Chromium for float-pdf (required) and float-deck (optional
+# screenshot helper). Idempotent: skips npm install when node_modules/playwright
+# is already present. Chromium is cached globally under ~/.cache/ms-playwright,
+# so the second invocation is a fast no-op.
+# ---------------------------------------------------------------------------
+setup_playwright_skill() {
+  local label="$1"
+  local dir="$2"
+
+  if [[ ! -f "$dir/package.json" ]]; then
+    echo "  ⚠ Skipping $label setup — no package.json at $dir"
+    return 0
+  fi
+
+  echo ""
+  echo "→ Setting up Playwright for $label ($dir) ..."
+
+  if ! command -v npm &>/dev/null; then
+    echo "  ⚠ npm not found — skipping. Install Node.js, then run:"
+    echo "      (cd \"$dir\" && npm install && npx playwright install chromium)"
+    return 0
+  fi
+
+  if [[ -d "$dir/node_modules/playwright" ]]; then
+    echo "  ✓ node_modules/playwright already present — skipping npm install"
+  else
+    if ! (cd "$dir" && npm install --no-audit --no-fund); then
+      echo "  ⚠ npm install failed for $label. Re-run manually:"
+      echo "      (cd \"$dir\" && npm install && npx playwright install chromium)"
+      return 0
+    fi
+  fi
+
+  if ! (cd "$dir" && npx --yes playwright install chromium); then
+    echo "  ⚠ Chromium download failed for $label. Re-run manually:"
+    echo "      (cd \"$dir\" && npx playwright install chromium)"
+    return 0
+  fi
+
+  echo "  ✓ $label Playwright setup complete"
+}
+
+setup_playwright_skill "float-pdf"  "$SKILLS_DIR/float-pdf/scripts"
+setup_playwright_skill "float-deck" "$SKILLS_DIR/float-deck/assets"
 
 # ---------------------------------------------------------------------------
 # Install custom commands
@@ -382,9 +426,7 @@ jq '
                   "nano-banana-use": "allow",
                   "nano-banana-prompts": "allow",
                   "ask-linkedin-audit": "allow",
-                  "ask-linkedin-calendar": "allow",
-                  "ask-linkedin-post": "allow",
-                  "ask-linkedin-profile": "allow"
+                  "ask-linkedin-calendar": "allow"
                 }
               }
             )
