@@ -1,0 +1,29 @@
+<!--
+  Float logo — circle horizon with two drifting waves.
+  Standalone version of the inline markup used across Float decks/documents.
+
+  Usage notes:
+  - currentColor drives the outer ring; set color:var(--mint) on the wrapper.
+  - The two <path> elements animate via .float-wave--back / .float-wave--front
+    (keyframes live in deck.css). Paths are built 3x viewBox-wide so a -100u
+    shift loops seamlessly. Remove the classes for a static (PDF/print) logo.
+  - Pair with a Fraunces wordmark "Float" at font-weight:300, color:var(--mint).
+  - IDs are suffixed so multiple copies on one page don't collide. When inlining
+    more than once, give each instance unique ids (float-circle-2, float-grad-2…).
+-->
+<svg width="44" height="44" viewBox="0 0 100 100" aria-label="Float" role="img" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="float-circle">
+      <circle cx="50" cy="50" r="46"></circle>
+    </clipPath>
+    <linearGradient id="float-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#B8F2D6"></stop>
+      <stop offset="100%" stop-color="#7AA8E0"></stop>
+    </linearGradient>
+  </defs>
+  <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="2"></circle>
+  <g clip-path="url(#float-circle)">
+    <path class="float-wave--back" d="M -100 60 Q -75 50 -50 60 T 0 60 T 50 60 T 100 60 T 150 60 T 200 60 L 200 110 L -100 110 Z" fill="url(#float-grad)"></path>
+    <path class="float-wave--front" d="M -100 68 Q -75 60 -50 68 T 0 68 T 50 68 T 100 68 T 150 68 T 200 68 L 200 110 L -100 110 Z" fill="#B8F2D6" opacity="0.35"></path>
+  </g>
+</svg>
