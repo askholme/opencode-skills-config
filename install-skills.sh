@@ -261,10 +261,11 @@ install_local_skill "ask-linkedin-audit" "ask-linkedin-audit"
 install_local_skill "ask-linkedin-calendar" "ask-linkedin-calendar"
 
 # ---------------------------------------------------------------------------
-# Install local skills: float-deck and float-pdf
+# Install local skills: float-deck, float-pdf, and float-slides
 # ---------------------------------------------------------------------------
 install_local_skill "float-deck" "float-deck"
 install_local_skill "float-pdf" "float-pdf"
+install_local_skill "float-slides" "float-slides"
 
 # ---------------------------------------------------------------------------
 # Set up Playwright/Chromium for float-pdf (required) and float-deck (optional
@@ -362,7 +363,8 @@ jq '
                   "nano-banana-prompts": "allow",
                   "caveman": "allow",
                   "float-deck": "allow",
-                  "float-pdf": "allow"
+                  "float-pdf": "allow",
+                  "float-slides": "allow"
                 }
               }
             )
