@@ -1,0 +1,13 @@
+{
+  "name": "float-deck-screenshot",
+  "private": true,
+  "type": "module",
+  "description": "Optional Playwright helper to screenshot Float deck slides for review. Run `npm run setup` once.",
+  "scripts": {
+    "setup": "npm install && npx playwright install chromium",
+    "shoot": "node screenshot.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.58.2"
+  }
+}

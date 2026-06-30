@@ -255,8 +255,59 @@ install_local_skill "pptx-numa/pptx-numa" "pptx-numa"
 install_local_skill "caveman" "caveman"
 
 # ---------------------------------------------------------------------------
-# Install local skills: ask-linkedin-*
+# Install local skills: float-deck, float-pdf, and float-slides
 # ---------------------------------------------------------------------------
+install_local_skill "float-deck" "float-deck"
+install_local_skill "float-pdf" "float-pdf"
+install_local_skill "float-slides" "float-slides"
+
+# ---------------------------------------------------------------------------
+# Set up Playwright/Chromium for float-pdf (required) and float-deck (optional
+# screenshot helper). Idempotent: skips npm install when node_modules/playwright
+# is already present. Chromium is cached globally under ~/.cache/ms-playwright,
+# so the second invocation is a fast no-op.
+# ---------------------------------------------------------------------------
+setup_playwright_skill() {
+  local label="$1"
+  local dir="$2"
+
+  if [[ ! -f "$dir/package.json" ]]; then
+    echo "  ⚠ Skipping $label setup — no package.json at $dir"
+    return 0
+  fi
+
+  echo ""
+  echo "→ Setting up Playwright for $label ($dir) ..."
+
+  if ! command -v npm &>/dev/null; then
+    echo "  ⚠ npm not found — skipping. Install Node.js, then run:"
+    echo "      (cd \"$dir\" && npm install && npx playwright install chromium)"
+    return 0
+  fi
+
+  if [[ -d "$dir/node_modules/playwright" ]]; then
+    echo "  ✓ node_modules/playwright already present — skipping npm install"
+  else
+    if ! (cd "$dir" && npm install --no-audit --no-fund); then
+      echo "  ⚠ npm install failed for $label. Re-run manually:"
+      echo "      (cd \"$dir\" && npm install && npx playwright install chromium)"
+      return 0
+    fi
+  fi
+
+  if ! (cd "$dir" && npx --yes playwright install chromium); then
+    echo "  ⚠ Chromium download failed for $label. Re-run manually:"
+    echo "      (cd \"$dir\" && npx playwright install chromium)"
+    return 0
+  fi
+
+  echo "  ✓ $label Playwright setup complete"
+}
+
+setup_playwright_skill "float-pdf"  "$SKILLS_DIR/float-pdf/scripts"
+setup_playwright_skill "float-deck" "$SKILLS_DIR/float-deck/assets"
+
+>>>>>>> 1c63e3e12a82de1d919a1d097d6ee76005195d69
 # ---------------------------------------------------------------------------
 # Install custom commands
 # ---------------------------------------------------------------------------
@@ -305,7 +356,10 @@ jq '
                   "lead-magnet": "allow",
                   "nano-banana-use": "allow",
                   "nano-banana-prompts": "allow",
-                  "caveman": "allow"
+                  "caveman": "allow",
+                  "float-deck": "allow",
+                  "float-pdf": "allow",
+                  "float-slides": "allow"
                 }
               }
             )
