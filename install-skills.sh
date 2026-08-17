@@ -307,7 +307,13 @@ setup_playwright_skill() {
 setup_playwright_skill "float-pdf"  "$SKILLS_DIR/float-pdf/scripts"
 setup_playwright_skill "float-deck" "$SKILLS_DIR/float-deck/assets"
 
->>>>>>> 1c63e3e12a82de1d919a1d097d6ee76005195d69
+# ---------------------------------------------------------------------------
+# Install local LinkedIn sales skills (Nick Broekema methodology)
+# ---------------------------------------------------------------------------
+install_local_skill "linkedin-outreach-engine" "linkedin-outreach-engine"
+install_local_skill "linkedin-sales-sparring"  "linkedin-sales-sparring"
+install_local_skill "nick-sales-coaching"     "nick-sales-coaching"
+
 # ---------------------------------------------------------------------------
 # Install custom commands
 # ---------------------------------------------------------------------------
@@ -422,6 +428,9 @@ jq '
                   "agent-tools": "allow",
                   "nano-banana-use": "allow",
                   "nano-banana-prompts": "allow",
+                  "linkedin-outreach-engine": "allow",
+                  "linkedin-sales-sparring": "allow",
+                  "nick-sales-coaching": "allow",
                 }
               }
             )
