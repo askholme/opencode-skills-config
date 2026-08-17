@@ -3137,10 +3137,10 @@
   const el = (tag, cls) => { const n = document.createElement(tag); if (cls) n.className = cls; return n; };
   const $ = id => document.getElementById(id);
 
-  let baseCount = 0;          // slide count in the on-disk file we mapped against
   let structuralChanged = false;
   let fileHandle = null;
   let justPicked = false;     // true when this save triggered the one-time file pick
+  let lastKnownSrc = null;    // exact bytes we last know to be on disk (external-edit guard)
   const undoStack = [];
   let autoSaveTimer = null;
   let saving = false;
@@ -3716,12 +3716,16 @@
     status('Saving...');
     try {
       const src = await (await fileHandle.getFile()).text();
+      if (lastKnownSrc === null) lastKnownSrc = src;
+      if (lastKnownSrc !== null && src !== lastKnownSrc) {
+        status('Auto-save skipped (file changed externally)'); saving = false; return;
+      }
       const out = splice(src);
       if (out == null) { status('Auto-save skipped (file changed externally)'); saving = false; return; }
       const w = await fileHandle.createWritable();
       await w.write(out); await w.close();
+      lastKnownSrc = out;
       liveSlides().forEach((s, i) => { delete s.dataset.edDirty; s.dataset.srcIdx = i; });
-      baseCount = liveSlides().length;
       structuralChanged = false;
       markDirty(); renderRail();
       status('Saved');
@@ -3785,7 +3789,7 @@
       n.classList.remove('active');
       if (!n.getAttribute('class')) n.removeAttribute('class');
     }
-    return '  ' + c.outerHTML;
+    return '    ' + c.outerHTML;
   }
 
   function ensureActive(body, isFirst) {
@@ -3801,7 +3805,6 @@
   function splice(src) {
     const re = /^([ \t]*)<section class="slide[^>]*>[\s\S]*?\n\1<\/section>/gm;
     const ms = [...src.matchAll(re)];
-    if (ms.length !== baseCount) return null;
     const chunks = []; let pos = 0;
     for (const m of ms) {
       const prefix = src.slice(pos, m.index);
@@ -3857,17 +3860,22 @@
       }
       const h = await getHandle();
       const src = await (await h.getFile()).text();
+      if (lastKnownSrc === null) lastKnownSrc = src;
+      if (lastKnownSrc !== null && src !== lastKnownSrc) {
+        if (confirm('The file on disk has changed since this page loaded (someone else edited it?). ' +
+            'In-place merge is unsafe. Download an updated copy instead?')) downloadCopy();
+        return;
+      }
       const out = splice(src);
       if (out == null) {
-        if (confirm('The file on disk has a different slide count than when this page loaded ' +
-            '(someone else edited it?). In-place merge is unsafe. Download an updated copy instead?')) downloadCopy();
+        offerDownload('Could not merge changes into this file. Download an updated copy instead?');
         return;
       }
       const w = await h.createWritable();
       await w.write(out); await w.close();
+      lastKnownSrc = out;
       // re-anchor against the file we just wrote
       liveSlides().forEach((s, i) => { delete s.dataset.edDirty; s.dataset.srcIdx = i; });
-      baseCount = liveSlides().length;
       structuralChanged = false;
       markDirty(); renderRail();
       status(justPicked ? 'Saved. Auto-save is now active.' : 'Saved');
@@ -3991,7 +3999,6 @@
 
   /* ---------- init ---------- */
   liveSlides().forEach((s, i) => s.dataset.srcIdx = i);
-  baseCount = liveSlides().length;
   makeEditable(deck);
   watchMutations();
   const coreShow = window.show;
