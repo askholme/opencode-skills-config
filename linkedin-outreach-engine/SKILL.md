@@ -37,6 +37,8 @@ This skill starts conversations. Once a prospect replies and a real conversation
 
 **Never fabricate.** Placeholders like [similar client] and [result] get filled with real numbers only. No case studies yet? Frame past work experience as a client success story instead.
 
+**Use personal relevance when available.** If the sender has direct experience related to a recipient's post, role or company situation, briefly mention it. This establishes peer credibility and explains why the question is genuine. If no strong relevance exists, keep the opener focused entirely on the recipient. See references/sender-context.md for Ask Holme's positioning and how to weave lived experience into an opener without sounding like a pitch.
+
 ## Diagnosing a stuck user
 
 When someone says outreach "doesn't work", find which stage breaks:
