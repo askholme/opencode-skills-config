@@ -1,11 +1,12 @@
 # Profile to Icebreaker
 
-A step plan for turning one LinkedIn profile into one personal opening line. Works two ways:
+A step plan for turning one LinkedIn profile into one personal opening line. Three research paths:
 
 - **With Claude in Chrome:** the user opens the profile in their browser and asks Claude to scan it. Claude reads the page directly.
-- **Without Chrome:** the user pastes the profile (headline, about, recent activity) and ideally their 2-3 most recent posts.
+- **With the LinkedIn CLI:** run `linkedin-rs profile view` and `profile posts` against the recipient's profile for authenticated, machine-readable data (name, headline, about, positions, latest posts). Best when Claude can't access the page or the user wants faster structured research. See references/linkedin-cli-research.md for commands, JSON fields, and operational rules.
+- **Without tooling:** the user pastes the profile (headline, about, recent activity) and ideally their 2-3 most recent posts.
 
-**Hard rule: Claude drafts, the human sends.** Never automate sending, connection requests, or any LinkedIn action. LinkedIn bans accounts for automation, and a banned account kills the user's entire channel. Reading and drafting with a human in the loop is the line; stay behind it.
+**Hard rule: Claude drafts, the human sends.** Never automate sending, connection requests, or any LinkedIn action. LinkedIn bans accounts for automation, and a banned account kills the user's entire channel. Reading and drafting with a human in the loop is the line; stay behind it. The CLI's `profile visit` command also counts as automation (it registers a visible view) — never run it.
 
 ## Step 1: Scan for signals (in this order of value)
 
