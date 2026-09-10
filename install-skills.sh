@@ -10,7 +10,10 @@ REPO_ROOT="$SCRIPT_DIR"
 
 SKILLS_DIR="$HOME/.config/opencode/skills"
 COMMANDS_DIR="$HOME/.config/opencode/commands"
+INSTRUCTIONS_DIR="$HOME/.config/opencode/instructions"
 OPENCODE_CONFIG="$HOME/.config/opencode/opencode.json"
+SUPERPOWERS_PLUGIN="superpowers@git+https://github.com/obra/superpowers.git"
+SUPERPOWERS_WORKERS_INSTRUCTION="$INSTRUCTIONS_DIR/superpowers-workers.md"
 
 # ---------------------------------------------------------------------------
 # Dependency checks
@@ -106,6 +109,7 @@ install_local_skill() {
 # ---------------------------------------------------------------------------
 mkdir -p "$SKILLS_DIR"
 mkdir -p "$COMMANDS_DIR"
+mkdir -p "$INSTRUCTIONS_DIR"
 mkdir -p "$(dirname "$OPENCODE_CONFIG")"
 
 if [[ ! -f "$OPENCODE_CONFIG" ]]; then
@@ -129,15 +133,6 @@ for skill in docx pptx doc-coauthoring pdf skill-creator xlsx frontend-design; d
 done
 
 # ---------------------------------------------------------------------------
-# Fetch skill from https://github.com/obra/superpowers
-# ---------------------------------------------------------------------------
-fetch_skill_dir \
-  "https://github.com/obra/superpowers" \
-  "main" \
-  "skills/brainstorming" \
-  "brainstorming"
-
-# ---------------------------------------------------------------------------
 # Fetch skills from https://github.com/sickn33/antigravity-awesome-skills
 # ---------------------------------------------------------------------------
 ANTIGRAVITY_REPO="https://github.com/sickn33/antigravity-awesome-skills"
@@ -146,6 +141,26 @@ ANTIGRAVITY_BRANCH="main"
 for skill in linkedin-cli pptx-official professional-proofreader; do
   fetch_skill_dir "$ANTIGRAVITY_REPO" "$ANTIGRAVITY_BRANCH" "skills/$skill" "$skill"
 done
+
+# ---------------------------------------------------------------------------
+# Install build-controller instructions for model-specific Superpowers workers
+# ---------------------------------------------------------------------------
+echo ""
+echo "-> Installing Superpowers worker routing instructions ..."
+cp "$REPO_ROOT/instructions/superpowers-workers.md" "$SUPERPOWERS_WORKERS_INSTRUCTION"
+echo "  ok Installed $SUPERPOWERS_WORKERS_INSTRUCTION"
+
+if ! compgen -G "$HOME/.config/opencode/agents/superpowers-worker-*.md" > /dev/null; then
+  echo "  WARNING: No superpowers-worker-* agents are installed."
+  echo "           Install them before starting a Superpowers controller session."
+fi
+
+# The old standalone skill has higher priority than plugin-provided skills and
+# would shadow the version bundled with the full Superpowers plugin.
+if [[ -d "$SKILLS_DIR/brainstorming" ]]; then
+  rm -rf "$SKILLS_DIR/brainstorming"
+  echo "  ok Removed legacy standalone brainstorming skill"
+fi
 
 # ---------------------------------------------------------------------------
 # Fetch skill from https://github.com/openclaudia/openclaudia-skills
@@ -327,24 +342,60 @@ for cmd_file in "$REPO_ROOT/commands/"*.md; do
 done
 
 # ---------------------------------------------------------------------------
-# Merge permission config into opencode.json
+# Merge plugin, instruction, and permission config into opencode.json
 # ---------------------------------------------------------------------------
 echo ""
-echo "→ Merging skill permissions into $OPENCODE_CONFIG ..."
+echo "→ Merging Superpowers and skill configuration into $OPENCODE_CONFIG ..."
 
-# Build the jq expression for a deep merge that:
-#   1. Sets permission.skill to { "*": "deny" }
-#   2. Deep-merges each agent entry (preserving existing keys like model/description)
+# Build the jq expression for an idempotent merge that:
+#   1. Adds the Superpowers plugin and worker instruction without duplicates
+#   2. Sets permission.skill to { "*": "deny" }
+#   3. Deep-merges each agent entry (preserving existing keys like model/description)
 #      by only overwriting permission.skill for each agent
-jq '
+jq \
+  --arg superpowers_plugin "$SUPERPOWERS_PLUGIN" \
+  --arg superpowers_workers_instruction "$SUPERPOWERS_WORKERS_INSTRUCTION" \
+  '
   # Deep-merge skill permission settings
   . * {
+    "plugin": (
+      (.plugin // []) |
+      if index($superpowers_plugin) then . else . + [$superpowers_plugin] end
+    ),
+    "instructions": (
+      (.instructions // []) |
+      if index($superpowers_workers_instruction) then . else . + [$superpowers_workers_instruction] end
+    ),
     "permission": (
       (.permission // {}) * { "skill": { "*": "deny" } }
     ),
     "agent": (
       (.agent // {}) |
       . * {
+        "build": (
+          (.build // {}) * {
+            "permission": (
+              ((.build // {}).permission // {}) * {
+                "skill": {
+                  "brainstorming": "allow",
+                  "dispatching-parallel-agents": "allow",
+                  "executing-plans": "allow",
+                  "finishing-a-development-branch": "allow",
+                  "receiving-code-review": "allow",
+                  "requesting-code-review": "allow",
+                  "subagent-driven-development": "allow",
+                  "systematic-debugging": "allow",
+                  "test-driven-development": "allow",
+                  "using-git-worktrees": "allow",
+                  "using-superpowers": "allow",
+                  "verification-before-completion": "allow",
+                  "writing-plans": "allow",
+                  "writing-skills": "allow"
+                }
+              }
+            )
+          }
+        ),
         "business-consultant": (
           (.["business-consultant"] // {}) * {
             "permission": (
@@ -467,7 +518,7 @@ jq '
       }
     )
   }
-' "$OPENCODE_CONFIG" > "${OPENCODE_CONFIG}.tmp"
+  ' "$OPENCODE_CONFIG" > "${OPENCODE_CONFIG}.tmp"
 
 mv "${OPENCODE_CONFIG}.tmp" "$OPENCODE_CONFIG"
 echo "  ✓ opencode.json updated"
