@@ -180,11 +180,12 @@ This repo is a **configuration and skill management system for the opencode AI c
 ### 1. Skill Installer (`install-skills.sh`)
 
 A Bash script that:
-1. Fetches 16 skills from 7 GitHub repos using git sparse checkout (shallow, blob-filtered)
-2. Installs 2 local skills (`pptx-numa`, `caveman`) from the working tree
+1. Fetches remote skills from GitHub repos using git sparse checkout (shallow, blob-filtered)
+2. Installs repository-local skills from the working tree
 3. Copies custom commands from `commands/` to `~/.config/opencode/commands/`
 4. Patches the `nano-banana-use` skill with a hardcoded Google API key fallback
-5. Merges per-agent skill permissions into `~/.config/opencode/opencode.json` using `jq`
+5. Installs the full `obra/superpowers` OpenCode plugin and model-specific worker routing instructions
+6. Merges plugin, instruction, and per-agent skill configuration into `~/.config/opencode/opencode.json` using `jq`
 
 **Skills installed and their agents:**
 
@@ -192,7 +193,7 @@ A Bash script that:
 |---|---|---|
 | `docx`, `pptx`, `doc-coauthoring`, `pdf`, `xlsx` | anthropics/skills | business-consultant |
 | `frontend-design`, `skill-creator` | anthropics/skills | architect, developer |
-| `brainstorming` | obra/superpowers | architect, business-brainstorm |
+| All Superpowers skills, including `brainstorming`, `subagent-driven-development`, TDD, debugging, review, planning, worktrees, and verification | obra/superpowers OpenCode plugin | build; `brainstorming` is also available to architect and business-brainstorm |
 | `linkedin-cli`, `pptx-official`, `professional-proofreader` | sickn33/antigravity-awesome-skills | business-consultant |
 | `linkedin-content`, `lead-magnet` | openclaudia/openclaudia-skills | business-consultant, linkedin-support |
 | `agent-tools`, `social-media-carousel` | inference-sh/skills | linkedin-support |
@@ -201,6 +202,14 @@ A Bash script that:
 | `nano-banana-prompts` | secondsky/claude-skills | business-consultant, linkedin-support |
 | `pptx-numa` | **local** (`pptx-numa/pptx-numa/`) | business-consultant |
 | `caveman` | **local** (`caveman/`) | business-consultant, architect, developer, code-reviewer, code-reviewerer |
+
+The installer also copies `instructions/superpowers-workers.md` into the
+OpenCode instruction directory. It overrides Superpowers' generic OpenCode
+subagent mapping for controller workflows: the build agent dispatches a named
+`superpowers-worker-*` agent, honors user-selected implementation and review
+workers, and can use a separate worker for final review. Worker definitions are
+managed by the companion `opencode-agents` repository and must be installed in
+`~/.config/opencode/agents/` before starting a new OpenCode session.
 
 **Custom commands installed:**
 

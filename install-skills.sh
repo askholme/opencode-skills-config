@@ -18,7 +18,7 @@ SUPERPOWERS_WORKERS_INSTRUCTION="$INSTRUCTIONS_DIR/superpowers-workers.md"
 # ---------------------------------------------------------------------------
 # Dependency checks
 # ---------------------------------------------------------------------------
-for dep in git jq; do
+for dep in git jq python3; do
   if ! command -v "$dep" &>/dev/null; then
     echo "ERROR: '$dep' is required but not found in PATH. Please install it and re-run." >&2
     exit 1
@@ -102,6 +102,110 @@ install_local_skill() {
   mkdir -p "$dest"
   cp -r "$src/." "$dest/"
   echo "  ✓ Installed '$skill_name' → $dest"
+}
+
+# ---------------------------------------------------------------------------
+# Helper: normalize OpenCode's JSONC-compatible config to strict JSON for jq
+#   normalize_jsonc <file>
+# ---------------------------------------------------------------------------
+normalize_jsonc() {
+  python3 - "$1" <<'PY'
+import json
+import pathlib
+import sys
+
+path = pathlib.Path(sys.argv[1])
+
+
+def strip_comments(text):
+    result = []
+    index = 0
+    in_string = False
+    escaped = False
+
+    while index < len(text):
+        char = text[index]
+
+        if in_string:
+            result.append(char)
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            index += 1
+            continue
+
+        if char == '"':
+            in_string = True
+            result.append(char)
+            index += 1
+        elif char == "/" and index + 1 < len(text) and text[index + 1] == "/":
+            index += 2
+            while index < len(text) and text[index] not in "\r\n":
+                index += 1
+        elif char == "/" and index + 1 < len(text) and text[index + 1] == "*":
+            index += 2
+            while index + 1 < len(text) and text[index:index + 2] != "*/":
+                if text[index] in "\r\n":
+                    result.append(text[index])
+                index += 1
+            if index + 1 >= len(text):
+                raise ValueError("unterminated block comment")
+            index += 2
+        else:
+            result.append(char)
+            index += 1
+
+    return "".join(result)
+
+
+def strip_trailing_commas(text):
+    result = []
+    index = 0
+    in_string = False
+    escaped = False
+
+    while index < len(text):
+        char = text[index]
+
+        if in_string:
+            result.append(char)
+            if escaped:
+                escaped = False
+            elif char == "\\":
+                escaped = True
+            elif char == '"':
+                in_string = False
+            index += 1
+            continue
+
+        if char == '"':
+            in_string = True
+        elif char == ",":
+            lookahead = index + 1
+            while lookahead < len(text) and text[lookahead].isspace():
+                lookahead += 1
+            if lookahead < len(text) and text[lookahead] in "}]":
+                index += 1
+                continue
+
+        result.append(char)
+        index += 1
+
+    return "".join(result)
+
+
+try:
+    source = path.read_text()
+    parsed = json.loads(strip_trailing_commas(strip_comments(source)))
+except (OSError, ValueError, json.JSONDecodeError) as error:
+    print(f"ERROR: Could not parse OpenCode config {path}: {error}", file=sys.stderr)
+    sys.exit(1)
+
+json.dump(parsed, sys.stdout)
+PY
 }
 
 # ---------------------------------------------------------------------------
@@ -352,7 +456,7 @@ echo "→ Merging Superpowers and skill configuration into $OPENCODE_CONFIG ..."
 #   2. Sets permission.skill to { "*": "deny" }
 #   3. Deep-merges each agent entry (preserving existing keys like model/description)
 #      by only overwriting permission.skill for each agent
-jq \
+if ! normalize_jsonc "$OPENCODE_CONFIG" | jq \
   --arg superpowers_plugin "$SUPERPOWERS_PLUGIN" \
   --arg superpowers_workers_instruction "$SUPERPOWERS_WORKERS_INSTRUCTION" \
   '
@@ -518,7 +622,12 @@ jq \
       }
     )
   }
-  ' "$OPENCODE_CONFIG" > "${OPENCODE_CONFIG}.tmp"
+  ' > "${OPENCODE_CONFIG}.tmp"
+then
+  rm -f "${OPENCODE_CONFIG}.tmp"
+  echo "ERROR: Failed to update $OPENCODE_CONFIG; the original file was left unchanged." >&2
+  exit 1
+fi
 
 mv "${OPENCODE_CONFIG}.tmp" "$OPENCODE_CONFIG"
 echo "  ✓ opencode.json updated"
